@@ -3,20 +3,21 @@
 # Bioinformatics with Professor Johnson
 
 # Packages that will be used for the Exam ####
+# comment out any package install lines so that you don't accidentally 
+# re-install them, which is very time consuming
+# if (!require("BiocManager", quietly = TRUE))
+#   install.packages("BiocManager")
 
-if (!require("BiocManager", quietly = TRUE))
-  install.packages("BiocManager")
+# BiocManager::install("Biostrings")
 
-BiocManager::install("Biostrings")
+# install.packages("UniprotR")
+# install.packages("protti")
+# install.packages("r3dmol")
+# install.packages("msa")
+# install.packages("seqinr")
+# install.packages("biomaRt")
 
-install.packages("UniprotR")
-install.packages("protti")
-install.packages("r3dmol")
-install.packages("msa")
-install.packages("seqinr")
-install.packages("biomaRt")
-
-BiocManager::install("GenomicAlignments")
+# BiocManager::install("GenomicAlignments")
 
 # Check to see if all the packages are correctly installed in R ####
 
@@ -27,14 +28,14 @@ library(r3dmol)
 library(GenomicAlignments)
 library(Biostrings)
 library(seqinr)
-library(bioma)
+library(biomaRt)
 
 # Importing and aligning the DNA sequences ####
 
-mySequenceFile1 <- system.file("Sequence_1",
-                               "Data/sequences.fasta",
-                               format = "fasta")
-mySequences1 <- readDNAStringSet("Data/sequences.fasta")
+# mySequenceFile1 <- system.file("Sequence_1",
+#                                "Data/sequences.fasta",
+#                                format = "fasta")
+mySequences1 <- readDNAStringSet("sequences.fasta") # I didn't see any "Data" folder
 mySequences1
 
 # I see a possible mutation in Homo_sapien_4. It goes from C to A. 
@@ -54,7 +55,8 @@ print(msahum,
 NiceLetters <- alphabetFrequency(msahum)
 print(NiceLetters)
 
-# I wanted to see the middle ones specifically to compare them to each other as well, which is why I separated them this way. 
+# I wanted to see the middle ones specifically to compare them to each other as 
+# well, which is why I separated them this way. 
 mySequences1[6]
 # There appears to be a point mutation in sequence 6 
 mySequences1[7]
@@ -68,6 +70,8 @@ mySequences1[13]
 mySequences1[14]
 mySequences1[15]
 
+# I'm not sure what the purpose of these next few lines of code is
+# but they do run correctly
 # Concentrate the sequences into a single string
 entire_sequence <- paste(mySequences1, collapse = "NA")
 
@@ -75,7 +79,7 @@ entire_sequence <- paste(mySequences1, collapse = "NA")
 cat(entire_sequence)
 
 #Use ClustalW for more information (msapackage)
-
+# duplicate code. msa already assigned to variable 'msahum'
 myClustalWAlignment <- msa(mySequences1,
                            "ClustalW")
 myClustalWAlignment
@@ -83,12 +87,23 @@ myClustalWAlignment
 print(myClustalWAlignment,
       show = "complete")
 #Homo sapien 6 has a deletion on shown above consensus 
+# if a comment line is very long, carry it over to the next line
 
 # Number 2: ####
-## The DNA sequences are typically very similar, expect for the point mutations and deletion. Their width is all relatively similar as well. DNA sequences 4,6, and 10 have point mutations. 
+## The DNA sequences are typically very similar, expect for the point mutations 
+# and deletion. Their width is all relatively similar as well. DNA sequences 4,6, 
+# and 10 have point mutations. 
+# but which of the three is the most different? Using the 'dist' function that 
+# we used in the homework would have told you this.
+# although I see that you figured it out in a circular way in the next question
 
 # Number 3: ####
-# I used blastn to find the gene that this may be. I exported it from the data file itself that I have saved in the data folder(it should all be in Github).It deals with the hemoglobin beta chain in Homo sapiens (hbb gene). The accession number that was an exact match LC1212775.1 (Query Cover 100%, E.value = 0.0, Percent Identity = 100%). I input the different DNA sequences into blast and compared it to the accession code LC1212775.1. Homo_sapien_6 had the lowest percent identity (99.84%). 
+# I used blastn to find the gene that this may be. I exported it from the data 
+# file itself that I have saved in the data folder(it should all be in Github).
+# It deals with the hemoglobin beta chain in Homo sapiens (hbb gene). The accession 
+# number that was an exact match LC1212775.1 (Query Cover 100%, E.value = 0.0, 
+# Percent Identity = 100%). I input the different DNA sequences into blast and 
+# compared it to the accession code LC1212775.1. Homo_sapien_6 had the lowest percent identity (99.84%). 
 
 # Question 4: Translating the sequence to a protein ####
 # Begin with separating the desired sequence from the entire fasta file (using Sequence 6 from mySequences[6]. 
@@ -110,10 +125,11 @@ AAseq
 header <- "Translated.Amino.Acid.Sequence"
 
 # Write the amino acid to a blank file 
-
- write.fasta(Biostrings::translate(HOMO6),
+# add a file type (fasta) to the file name
+# this file didn't exist in GitHub, did you run it?
+write.fasta(Biostrings::translate(HOMO6),
             "Homo_sapiens_6",
-            "AAseq",
+            "AAseq.fasta",
             open = "w",
             nbchar = 60,
             as.string = FALSE)
@@ -121,9 +137,12 @@ header <- "Translated.Amino.Acid.Sequence"
 # What does the protein match to: ####
 # A0A0J9YWK4 and it has catalytic activity in the HBB gene 
 # Component: Chromosome 11 with the identifier "UP000005640"
-# Although I didnt generate the 3D image, the image will be in the output folder of the Exam 1 folder. It will also be in the Github repository. 
+# Although I didnt generate the 3D image, the image will be in the output folder 
+# of the Exam 1 folder. It will also be in the Github repository. 
 
-# Cross-referencing this with uniProt indicate beta Thalassemia (genetic blood disorder in the HBB gene). This results in many complications such as: anemia, bone problems, heart problems, and even growth and developmental issues. 
+# Cross-referencing this with uniProt indicate beta Thalassemia (genetic blood 
+# disorder in the HBB gene). This results in many complications such as: anemia, 
+# bone problems, heart problems, and even growth and developmental issues. 
  
  
 
